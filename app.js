@@ -21,7 +21,7 @@ mongoose.connect(
   },
   (error) => {
     if (error) {
-      console.log("Falha ao conectar MongoDB");
+      console.log("Erro ao conectar MongoDB");
     } else {
       console.log("Sucesso conectar MongoDB");
     }
@@ -43,7 +43,7 @@ app.use(function (req, res, next) {
 });
 
 app.use((err, req, res, next) => {
-  res.status(err.status);
+  res.status(err.status || 500);
   res.send({ mensagem: err.message });
 });
 

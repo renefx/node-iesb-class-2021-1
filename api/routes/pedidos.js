@@ -1,14 +1,30 @@
 const express = require("express");
+const Pedido = require("../models/pedido");
 const router = express.Router();
 
-router.get("/", function (req, res) {
-  const { name, description } = req.body;
-  res.send(`GET pedidos`);
+router.get("/", async function (req, res) {
+  try {
+    const docs = await Pedido.find().populate("lista.idProduto");
+    res.send(docs);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.post("/", function (req, res) {
-  const { name, description } = req.body;
-  res.send(`POST pedidos`);
+router.post("/", async function (req, res, next) {
+  const { nomeUsuario, lista } = req.body;
+
+  const pedido = new Pedido({
+    nomeUsuario: nomeUsuario,
+    lista: lista,
+  });
+
+  try {
+    const doc = await pedido.save();
+    res.status(201).send(doc);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get("/:idPedido", (req, res) => {
